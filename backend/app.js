@@ -125,7 +125,7 @@ const app = express()
 // 2. CORS tənzimləməsi (Routes-dan əvvəl yazılmalıdır!)
 // server.js və ya app.js
 app.use(cors({
-  origin: ["http://localhost:5173", "https://flameteam.netlify.app"],
+  origin: ["http://localhost:5173", "https://flameteamm.netlify.app"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
