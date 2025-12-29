@@ -1,0 +1,62 @@
+[
+    {
+        "id" : 1,
+        "product_image": "https://glowing.g5plus.net/elementor/wp-content/uploads/2021/10/product-11-3-400x533.jpg",
+        "product_price" : "$ 10.00- $ 20.00",
+        "product_name" : "Shield Conditioner"
+       
+    },
+    {
+        "id" : 2,
+        "product_image": "https://glowing.g5plus.net/elementor/wp-content/uploads/2021/10/product-13-4-400x533.jpg",
+        "product_price" : " $ 20.00",
+        "product_name" : "Perfecting facial oil"
+       
+    },
+    {
+        "id" : 3,
+        "product_image": "https://glowing.g5plus.net/elementor/wp-content/uploads/2021/10/product-10-3-400x533.jpg",
+        "product_price" : " $ 23.00",
+        "product_name" : "Enriched Hand & Body Wash"
+        
+    },
+    {
+        "id" : 4,
+        "product_image": "https://glowing.g5plus.net/elementor/wp-content/uploads/2021/10/product-12-3-400x533.jpg",
+        "product_price" : " $ 45.00",
+        "product_name" : "Shield Shampoo"
+         
+    },
+    {
+        "id" : 5,
+        "product_image": "https://glowing.g5plus.net/elementor/wp-content/uploads/2021/10/product-08-04-400x533.jpg",
+        "product_price" : "$ 90.00",
+        "product_name" : "Enriched Hand Wash"
+        
+    },
+    {
+        "id" : 6,
+        "product_image": "https://glowing.g5plus.net/elementor/wp-content/uploads/2021/10/product-07-04-400x533.jpg",
+        "product_price" : " $18.00 -$ 90.00",
+        "product_name" : "Enriched Duo"
+        
+    },
+    {
+        "id" : 7,
+        "product_image": "https://glowing.g5plus.net/elementor/wp-content/uploads/2021/10/product-06-3-400x533.jpg",
+        "product_price" : " $30.00 -$ 55.00",
+        "product_name" : "Shield spray"
+       
+    },
+    {
+        "id" : 8,
+        "product_image": "https://glowing.g5plus.net/elementor/wp-content/uploads/2021/10/product-05-05-400x533.jpg",
+        "product_price" : " $18.00",
+        "product_name" : "Vital eye cream"
+      
+    }
+
+  
+
+
+]
