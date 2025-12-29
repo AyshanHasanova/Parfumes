@@ -54,7 +54,7 @@ export const productApi = createApi({
   reducerPath: 'productApi',
   // Netlify-da işləməsi üçün mütləq tam URL (https://...) yazılmalıdır
   baseQuery: fetchBaseQuery({ 
-    baseUrl: 'https://parfumes.onrender.com/api/v1', 
+    baseUrl: 'https://parfumes-1.onrender.com/api/v1', 
     credentials: 'include' 
   }),
   tagTypes: ['Products'],

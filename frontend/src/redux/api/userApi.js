@@ -155,7 +155,7 @@ export const userApi = createApi({
   reducerPath: "userApi",
   // baseUrl hissəsini tam ünvanla dəyişdik
   baseQuery: fetchBaseQuery({ 
-    baseUrl: "https://parfumes.onrender.com", 
+    baseUrl: "https://parfumes-1.onrender.com", 
     credentials: "include" 
   }),
   tagTypes: ["User", "Referrals", "AdminUsers"],

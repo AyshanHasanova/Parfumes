@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "proxy": "https://parfumes.onrender.com",
+  "proxy": "https://parfumes-1.onrender.com",
   "private": true,
   "version": "0.0.0",
   "type": "module",
