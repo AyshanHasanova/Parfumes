@@ -1,11 +1,106 @@
+// import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+// export const userApi = createApi({
+//   reducerPath: "userApi",
+//   baseQuery: fetchBaseQuery({ 
+//     // BURANI DÜZƏLTDİM: /api/v1 ƏLAVƏ EDİLDİ
+//     baseUrl: "https://parfumes-1.onrender.com/api/v1", 
+//     credentials: "include" 
+//   }),
+//   tagTypes: ["User", "Referrals", "AdminUsers"],
+//   endpoints: (builder) => ({
+//     login: builder.mutation({
+//       query: (data) => ({
+//         url: "/login",
+//         method: "POST",
+//         body: data,
+//       }),
+//       invalidatesTags: ["User"],
+//     }),
+//     register: builder.mutation({
+//       query: (data) => ({
+//         url: "/register",
+//         method: "POST",
+//         body: data,
+//       }),
+//     }),
+//     logout: builder.mutation({
+//       query: () => ({
+//         url: "/logout",
+//         method: "GET",
+//       }),
+//       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+//         try {
+//           await queryFulfilled;
+//           dispatch(userApi.util.resetApiState());
+//         } catch (err) {
+//           console.error("Logout failed:", err);
+//         }
+//       },
+//     }),
+//     getUserProfile: builder.query({
+//       query: () => "/me",
+//       providesTags: ["User"],
+//     }),
+//     getMyReferrals: builder.query({
+//       query: () => "/me/referrals",
+//       providesTags: ["Referrals"],
+//     }),
+//     getMyNetworkTree: builder.query({
+//       query: () => "/me/network-tree",
+//       providesTags: ["Referrals"],
+//     }),
+//     getAllUsersAdmin: builder.query({
+//       query: () => "/admin/users",
+//       providesTags: ["AdminUsers"],
+//     }),
+//     updateReferralByAdmin: builder.mutation({
+//       query: (body) => ({
+//         url: "/admin/referral-update",
+//         method: "PUT",
+//         body,
+//       }),
+//       invalidatesTags: ["AdminUsers", "Referrals", "User"],
+//     }),
+//     forgotPassword: builder.mutation({
+//       query: (data) => ({
+//         url: "/password/forget",
+//         method: "POST",
+//         body: data,
+//       }),
+//     }),
+//     resetPassword: builder.mutation({
+//       query: ({ token, data }) => ({
+//         url: `/password/reset/${token}`,
+//         method: "PUT",
+//         body: data,
+//       }),
+//     }),
+//   }),
+// });
+
+// export const {
+//   useLoginMutation,
+//   useRegisterMutation,
+//   useLogoutMutation,
+//   useGetUserProfileQuery,
+//   useForgotPasswordMutation,
+//   useResetPasswordMutation,
+//   useGetMyReferralsQuery,
+//   useGetMyNetworkTreeQuery,
+//   useGetAllUsersAdminQuery,
+//   useUpdateReferralByAdminMutation,
+// } = userApi;
+
+
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({ 
-    // BURANI DÜZƏLTDİM: /api/v1 ƏLAVƏ EDİLDİ
     baseUrl: "https://parfumes-1.onrender.com/api/v1", 
-    credentials: "include" 
+    credentials: "include" // Cookies/Token ötürülməsi üçün mütləqdir
   }),
   tagTypes: ["User", "Referrals", "AdminUsers"],
   endpoints: (builder) => ({
@@ -32,6 +127,7 @@ export const userApi = createApi({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
+          // Logout uğurlu olduqda bütün keşlənmiş məlumatları silirik
           dispatch(userApi.util.resetApiState());
         } catch (err) {
           console.error("Logout failed:", err);
