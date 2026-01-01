@@ -1,113 +1,3 @@
-
-
-
-// import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-// export const userApi = createApi({
-//   reducerPath: "userApi",
-//   baseQuery: fetchBaseQuery({ 
-//     baseUrl: "https://parfumes-1.onrender.com/api/v1", 
-//     prepareHeaders: (headers) => {
-//       const token = localStorage.getItem("token");
-//       if (token) {
-//         // Tokeni hər sorğuda Header-ə mütləq əlavə edirik
-//         headers.set("Authorization", `Bearer ${token}`);
-//       }
-//       return headers;
-//     },
-//     // Kompüter və bəzi brauzerlərdə sessiyaların stabil qalması üçün
-//     credentials: "include" 
-//   }),
-//   tagTypes: ["User", "Referrals", "AdminUsers"],
-//   endpoints: (builder) => ({
-//     login: builder.mutation({
-//       query: (data) => ({
-//         url: "/login",
-//         method: "POST",
-//         body: data,
-//       }),
-//       invalidatesTags: ["User"],
-//     }),
-//     register: builder.mutation({
-//       query: (data) => ({
-//         url: "/register",
-//         method: "POST",
-//         body: data,
-//       }),
-//     }),
-//     logout: builder.mutation({
-//       query: () => ({
-//         url: "/logout",
-//         method: "GET",
-//       }),
-//       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-//         try {
-//           await queryFulfilled;
-//           localStorage.removeItem("token");
-//           dispatch(userApi.util.resetApiState());
-//         } catch (err) {
-//           console.error("Logout xətası:", err);
-//         }
-//       },
-//     }),
-//     getUserProfile: builder.query({
-//       // MÜHÜM: Mobil brauzerlərin "Giriş et" düyməsində ilişib qalmaması üçün
-//       // URL sonuna hər dəfə dəyişən vaxt ştampı əlavə edirik.
-//       query: () => `/me?t=${new Date().getTime()}`,
-//       providesTags: ["User"],
-//     }),
-//     getMyReferrals: builder.query({
-//       query: () => `/me/referrals`,
-//       providesTags: ["Referrals"],
-//     }),
-//     getMyNetworkTree: builder.query({
-//       query: () => `/me/network-tree`,
-//       providesTags: ["Referrals"],
-//     }),
-//     getAllUsersAdmin: builder.query({
-//       query: () => "/admin/users",
-//       providesTags: ["AdminUsers"],
-//     }),
-//     updateReferralByAdmin: builder.mutation({
-//       query: (body) => ({
-//         url: "/admin/referral-update",
-//         method: "PUT",
-//         body,
-//       }),
-//       invalidatesTags: ["AdminUsers", "Referrals", "User"],
-//     }),
-//     forgotPassword: builder.mutation({
-//       query: (data) => ({
-//         url: "/password/forget",
-//         method: "POST",
-//         body: data,
-//       }),
-//     }),
-//     resetPassword: builder.mutation({
-//       query: ({ token, data }) => ({
-//         url: `/password/reset/${token}`,
-//         method: "PUT",
-//         body: data,
-//       }),
-//     }),
-//   }),
-// });
-
-// // Bütün hook-ların eksiksiz exportu
-// export const {
-//   useLoginMutation,
-//   useRegisterMutation,
-//   useLogoutMutation,
-//   useGetUserProfileQuery,
-//   useForgotPasswordMutation,
-//   useResetPasswordMutation,
-//   useGetMyReferralsQuery,
-//   useGetMyNetworkTreeQuery,
-//   useGetAllUsersAdminQuery,
-//   useUpdateReferralByAdminMutation,
-// } = userApi;
-
-
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
@@ -117,16 +7,16 @@ export const userApi = createApi({
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
-        // Backend-də "authorization" (kiçiklə) icazəsi verdiyimiz üçün belə göndəririk
+        // Həm böyük, həm kiçik hərflə başlıqları tanıması üçün
         headers.set("authorization", `Bearer ${token}`);
       }
       return headers;
     },
-    // Backend-də credentials: true olduğu üçün bu mütləqdir
     credentials: "include" 
   }),
   tagTypes: ["User", "Referrals", "AdminUsers"],
   endpoints: (builder) => ({
+    // GİRİŞ (LOGIN)
     login: builder.mutation({
       query: (data) => ({
         url: "/login",
@@ -135,43 +25,79 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+
+    // QEYDİYYAT (REGISTER)
     register: builder.mutation({
-      query: (data) => ({ url: "/register", method: "POST", body: data }),
+      query: (data) => ({
+        url: "/register",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
     }),
+
+    // ÇIXIŞ (LOGOUT)
     logout: builder.mutation({
-      query: () => ({ url: "/logout", method: "GET" }),
+      query: () => ({
+        url: "/logout",
+        method: "GET",
+      }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           localStorage.removeItem("token");
           dispatch(userApi.util.resetApiState());
-        } catch (err) { console.error(err); }
+        } catch (err) {
+          // Xəta olsa belə tokeni silirik ki, istifadəçi ilişib qalmasın
+          localStorage.removeItem("token");
+        }
       },
     }),
+
+    // PROFİL MƏLUMATLARI
     getUserProfile: builder.query({
-      // n=${Date.now()} mobil telefonun köhnə məlumatı göstərməsinin qarşısını alır
       query: () => `/me?n=${Date.now()}`,
       providesTags: ["User"],
     }),
+
+    // NETWORK TREE (MY TREE)
     getMyNetworkTree: builder.query({
       query: () => `/me/network-tree?n=${Date.now()}`,
       providesTags: ["Referrals"],
     }),
+
+    // REFERRALLAR SİYAHISI
     getMyReferrals: builder.query({
       query: () => "/me/referrals",
       providesTags: ["Referrals"],
     }),
+
+    // ADMIN: BÜTÜN İSTİFADƏÇİLƏR
     getAllUsersAdmin: builder.query({
       query: () => "/admin/users",
       providesTags: ["AdminUsers"],
     }),
+
+    // ADMIN: REFERRAL YENİLƏMƏ
     updateReferralByAdmin: builder.mutation({
-      query: (body) => ({ url: "/admin/referral-update", method: "PUT", body }),
+      query: (body) => ({
+        url: "/admin/referral-update",
+        method: "PUT",
+        body,
+      }),
       invalidatesTags: ["AdminUsers", "Referrals", "User"],
     }),
+
+    // ŞİFRƏNİ UNUTDUM
     forgotPassword: builder.mutation({
-      query: (data) => ({ url: "/password/forget", method: "POST", body: data }),
+      query: (data) => ({
+        url: "/password/forget",
+        method: "POST",
+        body: data,
+      }),
     }),
+
+    // ŞİFRƏNİ SIFIRLA
     resetPassword: builder.mutation({
       query: ({ token, data }) => ({ 
         url: `/password/reset/${token}`, 
@@ -182,6 +108,7 @@ export const userApi = createApi({
   }),
 });
 
+// BÜTÜN HOOK-LARIN EXPORTU
 export const {
   useLoginMutation,
   useRegisterMutation,
@@ -194,7 +121,5 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
 } = userApi;
-
-
 
 
