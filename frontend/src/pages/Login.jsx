@@ -1,80 +1,199 @@
-import React, {useState, useEffect} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+// import React, {useState, useEffect} from 'react'
+// import { Link, useNavigate } from 'react-router-dom'
 
+// import { useLoginMutation } from '../redux/api/userApi'
+// import toast from 'react-hot-toast'
+// const Login = () => {
+
+
+//     const [email,setEmail] = useState("")
+//     const [password, setPassword] = useState("")
+
+
+//     const [login, {isError, error, isLoading}] = useLoginMutation()
+//     const navigate = useNavigate()
+
+//     useEffect(()=> {
+//         if(isError) {
+//             toast.error(error?.data?.message)
+//         }
+//     }, [isError])
+
+//     const handleSubmit = async(e) => {
+//         e.preventDefault()
+
+//         try {
+//             // {"email":"emineabayeva@gmail.com", "password":"emine123"}
+//             const res = await login({email, password}).unwrap() 
+//             localStorage.setItem("token", res.token)
+//             navigate("/")
+//         } 
+    
+//         catch(err) {
+//             console.log("Bilinmeyen xeta")
+//         }
+//     }
+
+
+
+
+
+//     return (
+//         <section className="bg-gray-50 dark:bg-gray-900">
+//         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+//             <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+//                 <img className="w-8 h-8 mr-2" src="https://i.pinimg.com/1200x/e6/2c/51/e62c513ea89fe1a701275a8c6cf58118.jpg" alt="logo" />
+//               Flame   
+//             </a>
+//             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+//                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+//                     <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+//                         Sign in to your account
+//                     </h1>
+//                     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+//                         <div>
+//                             <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+//                             <input type="email" name="email" value={email} onChange={(e)=> setEmail(e.target.value)} id="email" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required=""/>
+//                         </div>
+//                         <div>
+//                             <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+//                             <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
+//                         </div>
+//                         <div className="flex items-center justify-end">
+                            
+//                             <Link to="/forgot-password" className="text-sm text-green-400g font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</Link>
+//                         </div>
+//                         <button type="submit" className="w-full bg-green-500 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+//                             {isLoading ? "Daxil olursunuz..." : "Daxil ol"}
+//                         </button>
+//                         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+//                             Don’t have an account yet? <Link to="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
+//                         </p>
+//                     </form>
+//                 </div>
+//             </div>
+//         </div>
+//         </section>
+//     )
+// }
+
+// export default Login
+
+
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useLoginMutation } from '../redux/api/userApi'
 import toast from 'react-hot-toast'
+
 const Login = () => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
+  const [login, { isError, error, isLoading }] = useLoginMutation()
+  const navigate = useNavigate()
 
-    const [email,setEmail] = useState("")
-    const [password, setPassword] = useState("")
-
-
-    const [login, {isError, error, isLoading}] = useLoginMutation()
-    const navigate = useNavigate()
-
-    useEffect(()=> {
-        if(isError) {
-            toast.error(error?.data?.message)
-        }
-    }, [isError])
-
-    const handleSubmit = async(e) => {
-        e.preventDefault()
-
-        try {
-            // {"email":"emineabayeva@gmail.com", "password":"emine123"}
-            const res = await login({email, password}).unwrap() 
-            localStorage.setItem("token", res.token)
-            navigate("/")
-        } 
-    
-        catch(err) {
-            console.log("Bilinmeyen xeta")
-        }
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.data?.message || "Giriş zamanı xəta baş verdi")
     }
+  }, [isError, error])
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
 
+    try {
+      const res = await login({ email, password }).unwrap()
+      localStorage.setItem("token", res.token)
+      toast.success("Xoş gəldiniz!")
+      navigate("/")
+    } catch (err) {
+      console.log("Xəta baş verdi:", err)
+    }
+  }
 
+  return (
+    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto w-full">
+        {/* LOGO VƏ BREND ADI */}
+        <Link to="/" className="flex items-center mb-6 text-2xl font-bold text-gray-900 dark:text-white">
+          <img 
+            className="w-10 h-10 mr-2 rounded-full" 
+            src="https://i.pinimg.com/1200x/e6/2c/51/e62c513ea89fe1a701275a8c6cf58118.jpg" 
+            alt="logo" 
+          />
+          Flame Team
+        </Link>
 
+        <div className="w-full bg-white rounded-2xl shadow-xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
+              Hesabınıza daxil olun
+            </h1>
+            
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              {/* EMAIL SAHƏSİ */}
+              <div>
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  E-poçt ünvanınız
+                </label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  id="email" 
+                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-green-500 focus:border-green-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none transition-all" 
+                  placeholder="nümunə@mail.com" 
+                  required
+                />
+              </div>
 
-    return (
-        <section className="bg-gray-50 dark:bg-gray-900">
-        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                <img className="w-8 h-8 mr-2" src="https://i.pinimg.com/1200x/e6/2c/51/e62c513ea89fe1a701275a8c6cf58118.jpg" alt="logo" />
-              Glowing    
-            </a>
-            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        Sign in to your account
-                    </h1>
-                    <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-                        <div>
-                            <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                            <input type="email" name="email" value={email} onChange={(e)=> setEmail(e.target.value)} id="email" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required=""/>
-                        </div>
-                        <div>
-                            <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                            <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
-                        </div>
-                        <div className="flex items-center justify-end">
-                            
-                            <Link to="/forgot-password" className="text-sm text-green-400g font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</Link>
-                        </div>
-                        <button type="submit" className="w-full bg-green-500 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                            {isLoading ? "Daxil olursunuz..." : "Daxil ol"}
-                        </button>
-                        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                            Don’t have an account yet? <Link to="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
-                        </p>
-                    </form>
-                </div>
-            </div>
+              {/* ŞİFRƏ SAHƏSİ */}
+              <div>
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Şifrə
+                </label>
+                <input 
+                  type="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  name="password" 
+                  id="password" 
+                  placeholder="••••••••" 
+                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-xl focus:ring-green-500 focus:border-green-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white outline-none transition-all" 
+                  required
+                />
+              </div>
+
+              {/* ŞİFRƏNİ UNUTDUNUZ? */}
+              <div className="flex items-center justify-end">
+                <Link to="/forgot-password" size="small" className="text-sm font-medium text-green-600 hover:underline">
+                  Şifrəni unutmusunuz?
+                </Link>
+              </div>
+
+              {/* DAXİL OL DÜYMƏSİ */}
+              <button 
+                type="submit" 
+                disabled={isLoading}
+                className="w-full bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-bold rounded-xl text-sm px-5 py-3 text-center transition-all shadow-lg shadow-green-100 disabled:opacity-50"
+              >
+                {isLoading ? "Giriş edilir..." : "Daxil ol"}
+              </button>
+
+              {/* QEYDİYYAT LİNKİ */}
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
+                Hələ hesabınız yoxdur?{" "}
+                <Link to="/register" className="font-bold text-green-600 hover:underline">
+                  Qeydiyyatdan keçin
+                </Link>
+              </p>
+            </form>
+          </div>
         </div>
-        </section>
-    )
+      </div>
+    </section>
+  )
 }
 
 export default Login
