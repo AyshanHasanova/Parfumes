@@ -33,7 +33,7 @@ const Healty = () => {
             
             <p className="text-gray-700 text-lg md:text-xl leading-relaxed font-medium md:pl-8 italic">
               "Bəzən bir qoxu bizi illər əvvələ qaytarır, bəzən isə xəyallarımızdakı məkana aparır. 
-              Fleam Team ailəsi olaraq missiyamız sizin hekayənizi qoxularla nəql etməkdir. 
+              Flame Team ailəsi olaraq missiyamız sizin hekayənizi qoxularla nəql etməkdir. 
               <br className="my-4 block" />
               Təbiətin ən saf cövhərlərindən ilham alaraq, hər kəsin ruhuna toxunacaq bir imza 
               qoxusu tapacağına inanırıq. Bizimlə öz duyğularınızın izini sürün."

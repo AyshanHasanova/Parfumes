@@ -20,7 +20,7 @@ const Mission = () => {
             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-yellow-400 rounded-full hidden md:block"></div>
             
             <p className="text-gray-700 text-lg md:text-xl leading-relaxed font-medium md:pl-8">
-              Fleam Team olaraq, biz standartlardan kənara çıxırıq. Hər bir ətirimiz fərdiliyi vurğulamaq üçün xüsusi olaraq dizayn edilib. 
+              Flame Team olaraq, biz standartlardan kənara çıxırıq. Hər bir ətirimiz fərdiliyi vurğulamaq üçün xüsusi olaraq dizayn edilib. 
               <br className="my-4 block" />
               Biz sadəcə qoxu satmırıq; biz sizə özünüzü ifadə etməyin ən estetik yolunu təqdim edirik. 
               Modern, qalıcı və təsir edici. <span className="text-yellow-600 font-semibold italic">Sərhədləri qoxunla müəyyən et.</span>

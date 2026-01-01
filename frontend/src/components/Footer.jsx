@@ -130,7 +130,7 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Company</h4>
           <p>Sizə ən yaxın filialı tapın. <br />  <span>Mağazalarımız</span></p>
-          <p><strong>+391 (0)35 2568 4593</strong></p>
+          <p><strong>(077) 346 48 11</strong></p>
           <p>tflame183@gmail.com</p>
         </div>
 

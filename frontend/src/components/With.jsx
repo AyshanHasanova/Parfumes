@@ -10,7 +10,7 @@ const With = () => {
       <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Kiçik başlıq */}
         <span className="text-yellow-600 font-semibold tracking-widest uppercase text-sm mb-4 block">
-          Sizə Yaxın Fleam Team
+          Sizə Yaxın Flame Team
         </span>
 
         {/* Ana başlıq */}
