@@ -1,3 +1,85 @@
+// import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+// export const userApi = createApi({
+//   reducerPath: "userApi",
+//   baseQuery: fetchBaseQuery({ 
+//     baseUrl: "https://parfumes-1.onrender.com/api/v1", 
+//     prepareHeaders: (headers) => {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         headers.set("authorization", `Bearer ${token}`);
+//       }
+//       return headers;
+//     },
+//     credentials: "include" 
+//   }),
+//   tagTypes: ["User", "Referrals", "AdminUsers"],
+//   endpoints: (builder) => ({
+//     login: builder.mutation({
+//       query: (data) => ({ url: "/login", method: "POST", body: data }),
+//       invalidatesTags: ["User"],
+//     }),
+//     register: builder.mutation({
+//       query: (data) => ({ url: "/register", method: "POST", body: data }),
+//       invalidatesTags: ["User"],
+//     }),
+//     logout: builder.mutation({
+//       query: () => ({ url: "/logout", method: "GET" }),
+//       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+//         try {
+//           await queryFulfilled;
+//         } catch (err) {
+//           console.error("Logout xətası:", err);
+//         } finally {
+//           // Sorğu uğurlu olsa da, olmasa da yaddaşı təmizləyirik
+//           localStorage.removeItem("token");
+//           dispatch(userApi.util.resetApiState());
+//         }
+//       },
+//     }),
+//     getUserProfile: builder.query({
+//       query: () => `/me?n=${Date.now()}`,
+//       providesTags: ["User"],
+//     }),
+//     getMyNetworkTree: builder.query({
+//       query: () => `/me/network-tree?n=${Date.now()}`,
+//       providesTags: ["Referrals"],
+//     }),
+//     getMyReferrals: builder.query({
+//       query: () => "/me/referrals",
+//       providesTags: ["Referrals"],
+//     }),
+//     getAllUsersAdmin: builder.query({
+//       query: () => "/admin/users",
+//       providesTags: ["AdminUsers"],
+//     }),
+//     updateReferralByAdmin: builder.mutation({
+//       query: (body) => ({ url: "/admin/referral-update", method: "PUT", body }),
+//       invalidatesTags: ["AdminUsers", "Referrals", "User"],
+//     }),
+//     forgotPassword: builder.mutation({
+//       query: (data) => ({ url: "/password/forget", method: "POST", body: data }),
+//     }),
+//     resetPassword: builder.mutation({
+//       query: ({ token, data }) => ({ 
+//         url: `/password/reset/${token}`, 
+//         method: "PUT", 
+//         body: data 
+//       }),
+//     }),
+//   }),
+// });
+
+// export const {
+//   useLoginMutation, useRegisterMutation, useLogoutMutation,
+//   useGetUserProfileQuery, useGetMyReferralsQuery, useGetMyNetworkTreeQuery,
+//   useGetAllUsersAdminQuery, useUpdateReferralByAdminMutation,
+//   useForgotPasswordMutation, useResetPasswordMutation,
+// } = userApi;
+
+
+
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
@@ -7,7 +89,8 @@ export const userApi = createApi({
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
-        headers.set("authorization", `Bearer ${token}`);
+        // iPhone (Safari) üçün ən etibarlı header formatı
+        headers.set("Authorization", `Bearer ${token.trim()}`);
       }
       return headers;
     },
@@ -21,7 +104,6 @@ export const userApi = createApi({
     }),
     register: builder.mutation({
       query: (data) => ({ url: "/register", method: "POST", body: data }),
-      invalidatesTags: ["User"],
     }),
     logout: builder.mutation({
       query: () => ({ url: "/logout", method: "GET" }),
@@ -29,15 +111,15 @@ export const userApi = createApi({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("Logout xətası:", err);
+          console.error("Logout error", err);
         } finally {
-          // Sorğu uğurlu olsa da, olmasa da yaddaşı təmizləyirik
           localStorage.removeItem("token");
           dispatch(userApi.util.resetApiState());
         }
       },
     }),
     getUserProfile: builder.query({
+      // n=${Date.now()} iPhone-un köhnə məlumatı (boş profili) göstərməsinin qarşısını alır
       query: () => `/me?n=${Date.now()}`,
       providesTags: ["User"],
     }),
@@ -76,5 +158,3 @@ export const {
   useGetAllUsersAdminQuery, useUpdateReferralByAdminMutation,
   useForgotPasswordMutation, useResetPasswordMutation,
 } = userApi;
-
-
