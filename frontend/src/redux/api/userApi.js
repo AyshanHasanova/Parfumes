@@ -1,10 +1,21 @@
+
+
+
 // import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // export const userApi = createApi({
 //   reducerPath: "userApi",
 //   baseQuery: fetchBaseQuery({ 
-//     // BURANI DÜZƏLTDİM: /api/v1 ƏLAVƏ EDİLDİ
 //     baseUrl: "https://parfumes-1.onrender.com/api/v1", 
+//     // BURADAKİ DƏYİŞİKLİK: Tokeni hər sorğuya mütləq əlavə edirik
+//     prepareHeaders: (headers) => {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         headers.set("Authorization", `Bearer ${token}`);
+//       }
+//       return headers;
+//     },
+//     // CORS və Cookie üçün lazım olsa qalsın
 //     credentials: "include" 
 //   }),
 //   tagTypes: ["User", "Referrals", "AdminUsers"],
@@ -32,6 +43,8 @@
 //       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
 //         try {
 //           await queryFulfilled;
+//           // Logout olduqda lokal tokeni də silirik (MÜTLƏQDİR)
+//           localStorage.removeItem("token");
 //           dispatch(userApi.util.resetApiState());
 //         } catch (err) {
 //           console.error("Logout failed:", err);
@@ -100,7 +113,17 @@ export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({ 
     baseUrl: "https://parfumes-1.onrender.com/api/v1", 
-    credentials: "include" // Cookies/Token ötürülməsi üçün mütləqdir
+    // MÜHÜM: Tokeni hər sorğuya mütləq şəkildə əlavə edirik
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        // "Bearer " formatı mobil brauzerlər üçün mütləqdir
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+    // Cookie və CORS təhlükəsizliyi üçün
+    credentials: "include" 
   }),
   tagTypes: ["User", "Referrals", "AdminUsers"],
   endpoints: (builder) => ({
@@ -127,10 +150,12 @@ export const userApi = createApi({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          // Logout uğurlu olduqda bütün keşlənmiş məlumatları silirik
+          // Logout olduqda lokal tokeni təmizləyirik
+          localStorage.removeItem("token");
+          // Redux state-i sıfırlayırıq
           dispatch(userApi.util.resetApiState());
         } catch (err) {
-          console.error("Logout failed:", err);
+          console.error("Çıxış zamanı xəta:", err);
         }
       },
     }),
