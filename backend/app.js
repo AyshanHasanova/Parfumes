@@ -96,9 +96,9 @@ app.use(cors({
     "https://flameteam.netlify.app", 
     "https://flameteamm.netlify.app"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization", "authorization"] 
 }));
 
 // 3. Middlewares

@@ -1,12 +1,12 @@
 
 
-
 // import React, { useState, useEffect } from 'react'
-// import { Link } from 'react-router-dom'
+// import { Link, useNavigate } from 'react-router-dom' // useNavigate əlavə etdik
 // import { useLoginMutation } from '../redux/api/userApi'
 // import toast from 'react-hot-toast'
 
 // const Login = () => {
+//   const navigate = useNavigate();
 //   const [email, setEmail] = useState("")
 //   const [password, setPassword] = useState("")
 //   const [login, { isError, error, isLoading }] = useLoginMutation()
@@ -22,18 +22,28 @@
 //     try {
 //       const res = await login({ email, password }).unwrap()
       
-//       // Tokeni mütləq saxlayırıq
-//       localStorage.setItem("token", res.token)
+//       // DEBUG: Telefonda yoxlamaq üçün bu line vacibdir
+//       console.log("Backend-dən gələn tam cavab:", res);
+
+//       // Zəmanətli token götürmə (res.token və ya res.data.token)
+//       const token = res?.token || res?.data?.token;
       
-//       toast.success("Xoş gəldiniz!")
-      
-//       // KOMPÜTER VƏ TELEFONDA SİSTEMİN YENİLƏNMƏSİ ÜÇÜN:
-//       setTimeout(() => {
-//         window.location.href = "/";
-//       }, 500);
+//       if (token) {
+//         localStorage.setItem("token", token);
+//         toast.success("Xoş gəldiniz!");
+        
+//         // window.location.href bəzən telefonda state-i dondurur
+//         // Ən yaxşısı əvvəlcə yönləndirmək, sonra refresh etməkdir
+//         setTimeout(() => {
+//           window.location.assign("/"); // Daha güclü yönləndirmə
+//         }, 500);
+//       } else {
+//         toast.error("Token tapılmadı! Backend-i yoxlayın.");
+//       }
       
 //     } catch (err) {
 //       console.log("Xəta:", err)
+//       toast.error("Giriş uğursuz oldu.");
 //     }
 //   }
 
@@ -48,12 +58,34 @@
 //           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
 //             <h1 className="text-xl font-bold text-center dark:text-white">Daxil ol</h1>
 //             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-//               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-3 rounded-xl border" placeholder="E-poçt" required />
-//               <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-3 rounded-xl border" placeholder="Şifrə" required />
-//               <button type="submit" disabled={isLoading} className="w-full bg-green-600 text-white p-3 rounded-xl font-bold">
+//               <input 
+//                 type="email" 
+//                 value={email} 
+//                 onChange={(e) => setEmail(e.target.value)} 
+//                 className="w-full p-3 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-green-500 outline-none" 
+//                 placeholder="E-poçt" 
+//                 required 
+//               />
+//               <input 
+//                 type="password" 
+//                 value={password} 
+//                 onChange={(e) => setPassword(e.target.value)} 
+//                 className="w-full p-3 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-green-500 outline-none" 
+//                 placeholder="Şifrə" 
+//                 required 
+//               />
+//               <button 
+//                 type="submit" 
+//                 disabled={isLoading} 
+//                 className={`w-full text-white p-3 rounded-xl font-bold transition ${isLoading ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}
+//               >
 //                 {isLoading ? "Giriş edilir..." : "Daxil ol"}
 //               </button>
 //             </form>
+            
+//             <p className="text-sm text-center text-gray-500">
+//               Şifrəni unutmusunuz? <Link to="/forget-password" size="small" className="text-green-600 font-bold">Bərpa et</Link>
+//             </p>
 //           </div>
 //         </div>
 //       </div>
@@ -62,13 +94,13 @@
 // }
 // export default Login
 
+
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom' // useNavigate əlavə etdik
+import { Link } from 'react-router-dom'
 import { useLoginMutation } from '../redux/api/userApi'
 import toast from 'react-hot-toast'
 
 const Login = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [login, { isError, error, isLoading }] = useLoginMutation()
@@ -84,28 +116,23 @@ const Login = () => {
     try {
       const res = await login({ email, password }).unwrap()
       
-      // DEBUG: Telefonda yoxlamaq üçün bu line vacibdir
-      console.log("Backend-dən gələn tam cavab:", res);
-
-      // Zəmanətli token götürmə (res.token və ya res.data.token)
+      // Tokeni hər iki ehtimalda tuturuq
       const token = res?.token || res?.data?.token;
       
       if (token) {
         localStorage.setItem("token", token);
         toast.success("Xoş gəldiniz!");
         
-        // window.location.href bəzən telefonda state-i dondurur
-        // Ən yaxşısı əvvəlcə yönləndirmək, sonra refresh etməkdir
+        // Telefonda localStorage-ın yazılması üçün 1 saniyəlik pauza
         setTimeout(() => {
-          window.location.assign("/"); // Daha güclü yönləndirmə
-        }, 500);
+          window.location.assign("/"); 
+        }, 1000);
       } else {
-        toast.error("Token tapılmadı! Backend-i yoxlayın.");
+        toast.error("Token alınmadı, zəhmət olmasa yenidən yoxlayın");
       }
       
     } catch (err) {
       console.log("Xəta:", err)
-      toast.error("Giriş uğursuz oldu.");
     }
   }
 
@@ -124,7 +151,7 @@ const Login = () => {
                 type="email" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                className="w-full p-3 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-green-500 outline-none" 
+                className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-green-500" 
                 placeholder="E-poçt" 
                 required 
               />
@@ -132,22 +159,23 @@ const Login = () => {
                 type="password" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                className="w-full p-3 rounded-xl border bg-gray-50 focus:ring-2 focus:ring-green-500 outline-none" 
+                className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-green-500" 
                 placeholder="Şifrə" 
                 required 
               />
               <button 
                 type="submit" 
                 disabled={isLoading} 
-                className={`w-full text-white p-3 rounded-xl font-bold transition ${isLoading ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}
+                className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-xl font-bold transition duration-200"
               >
                 {isLoading ? "Giriş edilir..." : "Daxil ol"}
               </button>
             </form>
-            
-            <p className="text-sm text-center text-gray-500">
-              Şifrəni unutmusunuz? <Link to="/forget-password" size="small" className="text-green-600 font-bold">Bərpa et</Link>
-            </p>
+            <div className="text-center mt-4">
+               <Link to="/password/forget" className="text-sm text-green-600 font-semibold hover:underline">
+                 Şifrəni unutmusunuz?
+               </Link>
+            </div>
           </div>
         </div>
       </div>
