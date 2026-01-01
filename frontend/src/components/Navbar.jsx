@@ -1,8 +1,3 @@
-
-
-
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom'; // useLocation əlavə edildi
 import { useGetUserProfileQuery, useLogoutMutation } from '../redux/api/userApi';
@@ -72,7 +67,7 @@ const Navbar = () => {
           <ul className="hidden md:flex items-center space-x-8 font-medium text-gray-600">
             <li><Link to="/" className="hover:text-green-600 transition">Ana səhifə</Link></li>
             <li><Link to="/about" className="hover:text-green-600 transition">Haqqında</Link></li>
-            <li><Link to="/store" className="hover:text-green-600 transition">Flame</Link></li>
+            <li><Link to="/store" className="hover:text-green-600 transition">Ətirlər</Link></li>
             {user && <li><Link to="/profile" className="hover:text-green-600 transition">My tree</Link></li>}
             <li><Link to="/contact" className="hover:text-green-600 transition">Əlaqə</Link></li>
           </ul>
@@ -146,7 +141,7 @@ const Navbar = () => {
           <div className="flex flex-col space-y-6 text-xl font-semibold text-gray-800">
             <Link onClick={() => setMobileMenuOpen(false)} to="/" className="hover:text-green-600">Ana səhifə</Link>
             <Link onClick={() => setMobileMenuOpen(false)} to="/about" className="hover:text-green-600">Haqqında</Link>
-            <Link onClick={() => setMobileMenuOpen(false)} to="/store" className="hover:text-green-600">Flame</Link>
+            <Link onClick={() => setMobileMenuOpen(false)} to="/store" className="hover:text-green-600">Ətirlər</Link>
             <Link onClick={() => setMobileMenuOpen(false)} to="/contact" className="hover:text-green-600">Əlaqə</Link>
           </div>
 

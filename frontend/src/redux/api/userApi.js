@@ -7,7 +7,7 @@ export const userApi = createApi({
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
-        // Həm böyük, həm kiçik hərflə başlıqları tanıması üçün
+        // Həm kiçik həm böyük hərflə 'authorization' başlığını dəstəkləyirik
         headers.set("authorization", `Bearer ${token}`);
       }
       return headers;
@@ -16,88 +16,62 @@ export const userApi = createApi({
   }),
   tagTypes: ["User", "Referrals", "AdminUsers"],
   endpoints: (builder) => ({
-    // GİRİŞ (LOGIN)
+    // GİRİŞ
     login: builder.mutation({
-      query: (data) => ({
-        url: "/login",
-        method: "POST",
-        body: data,
-      }),
+      query: (data) => ({ url: "/login", method: "POST", body: data }),
       invalidatesTags: ["User"],
     }),
 
-    // QEYDİYYAT (REGISTER)
+    // QEYDİYYAT
     register: builder.mutation({
-      query: (data) => ({
-        url: "/register",
-        method: "POST",
-        body: data,
-      }),
+      query: (data) => ({ url: "/register", method: "POST", body: data }),
       invalidatesTags: ["User"],
     }),
 
-    // ÇIXIŞ (LOGOUT)
+    // ÇIXIŞ (Navbar-dakı handleLogout ilə tam uyğun)
     logout: builder.mutation({
-      query: () => ({
-        url: "/logout",
-        method: "GET",
-      }),
+      query: () => ({ url: "/logout", method: "GET" }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
+        } catch (err) {
+          console.error("Logout xətası:", err);
+        } finally {
+          // Sorğu bitsə də, xəta versə də yaddaşı təmizləyirik
           localStorage.removeItem("token");
           dispatch(userApi.util.resetApiState());
-        } catch (err) {
-          // Xəta olsa belə tokeni silirik ki, istifadəçi ilişib qalmasın
-          localStorage.removeItem("token");
         }
       },
     }),
 
-    // PROFİL MƏLUMATLARI
+    // PROFİL (Navbar-ın data?.user gözləntisinə uyğun)
     getUserProfile: builder.query({
       query: () => `/me?n=${Date.now()}`,
       providesTags: ["User"],
     }),
 
-    // NETWORK TREE (MY TREE)
+    // MY TREE MƏLUMATLARI
     getMyNetworkTree: builder.query({
       query: () => `/me/network-tree?n=${Date.now()}`,
       providesTags: ["Referrals"],
     }),
 
-    // REFERRALLAR SİYAHISI
+    // DİGƏR ENDPOİNTLƏR
     getMyReferrals: builder.query({
       query: () => "/me/referrals",
       providesTags: ["Referrals"],
     }),
-
-    // ADMIN: BÜTÜN İSTİFADƏÇİLƏR
     getAllUsersAdmin: builder.query({
       query: () => "/admin/users",
       providesTags: ["AdminUsers"],
     }),
-
-    // ADMIN: REFERRAL YENİLƏMƏ
     updateReferralByAdmin: builder.mutation({
-      query: (body) => ({
-        url: "/admin/referral-update",
-        method: "PUT",
-        body,
-      }),
+      query: (body) => ({ url: "/admin/referral-update", method: "PUT", body }),
       invalidatesTags: ["AdminUsers", "Referrals", "User"],
     }),
-
-    // ŞİFRƏNİ UNUTDUM
     forgotPassword: builder.mutation({
-      query: (data) => ({
-        url: "/password/forget",
-        method: "POST",
-        body: data,
-      }),
+      query: (data) => ({ url: "/password/forget", method: "POST", body: data }),
     }),
-
-    // ŞİFRƏNİ SIFIRLA
     resetPassword: builder.mutation({
       query: ({ token, data }) => ({ 
         url: `/password/reset/${token}`, 
@@ -108,18 +82,11 @@ export const userApi = createApi({
   }),
 });
 
-// BÜTÜN HOOK-LARIN EXPORTU
 export const {
-  useLoginMutation,
-  useRegisterMutation,
-  useLogoutMutation,
-  useGetUserProfileQuery,
-  useGetMyReferralsQuery,
-  useGetMyNetworkTreeQuery,
-  useGetAllUsersAdminQuery,
-  useUpdateReferralByAdminMutation,
-  useForgotPasswordMutation,
-  useResetPasswordMutation,
+  useLoginMutation, useRegisterMutation, useLogoutMutation,
+  useGetUserProfileQuery, useGetMyReferralsQuery, useGetMyNetworkTreeQuery,
+  useGetAllUsersAdminQuery, useUpdateReferralByAdminMutation,
+  useForgotPasswordMutation, useResetPasswordMutation,
 } = userApi;
 
 
