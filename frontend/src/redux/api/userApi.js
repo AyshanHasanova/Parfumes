@@ -7,7 +7,6 @@ export const userApi = createApi({
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
-        // Həm kiçik həm böyük hərflə 'authorization' başlığını dəstəkləyirik
         headers.set("authorization", `Bearer ${token}`);
       }
       return headers;
@@ -16,19 +15,14 @@ export const userApi = createApi({
   }),
   tagTypes: ["User", "Referrals", "AdminUsers"],
   endpoints: (builder) => ({
-    // GİRİŞ
     login: builder.mutation({
       query: (data) => ({ url: "/login", method: "POST", body: data }),
       invalidatesTags: ["User"],
     }),
-
-    // QEYDİYYAT
     register: builder.mutation({
       query: (data) => ({ url: "/register", method: "POST", body: data }),
       invalidatesTags: ["User"],
     }),
-
-    // ÇIXIŞ (Navbar-dakı handleLogout ilə tam uyğun)
     logout: builder.mutation({
       query: () => ({ url: "/logout", method: "GET" }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -37,26 +31,20 @@ export const userApi = createApi({
         } catch (err) {
           console.error("Logout xətası:", err);
         } finally {
-          // Sorğu bitsə də, xəta versə də yaddaşı təmizləyirik
+          // Sorğu uğurlu olsa da, olmasa da yaddaşı təmizləyirik
           localStorage.removeItem("token");
           dispatch(userApi.util.resetApiState());
         }
       },
     }),
-
-    // PROFİL (Navbar-ın data?.user gözləntisinə uyğun)
     getUserProfile: builder.query({
       query: () => `/me?n=${Date.now()}`,
       providesTags: ["User"],
     }),
-
-    // MY TREE MƏLUMATLARI
     getMyNetworkTree: builder.query({
       query: () => `/me/network-tree?n=${Date.now()}`,
       providesTags: ["Referrals"],
     }),
-
-    // DİGƏR ENDPOİNTLƏR
     getMyReferrals: builder.query({
       query: () => "/me/referrals",
       providesTags: ["Referrals"],
