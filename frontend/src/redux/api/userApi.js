@@ -1,21 +1,20 @@
 
 
-
 // import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // export const userApi = createApi({
 //   reducerPath: "userApi",
 //   baseQuery: fetchBaseQuery({ 
 //     baseUrl: "https://parfumes-1.onrender.com/api/v1", 
-//     // BURADAKİ DƏYİŞİKLİK: Tokeni hər sorğuya mütləq əlavə edirik
 //     prepareHeaders: (headers) => {
 //       const token = localStorage.getItem("token");
 //       if (token) {
+//         // Həm mobil, həm kompüter üçün tokeni başlıqlara əlavə edirik
 //         headers.set("Authorization", `Bearer ${token}`);
 //       }
 //       return headers;
 //     },
-//     // CORS və Cookie üçün lazım olsa qalsın
+//     // Kompüterdə sessiyaların (cookie) işləməsi üçün
 //     credentials: "include" 
 //   }),
 //   tagTypes: ["User", "Referrals", "AdminUsers"],
@@ -43,11 +42,10 @@
 //       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
 //         try {
 //           await queryFulfilled;
-//           // Logout olduqda lokal tokeni də silirik (MÜTLƏQDİR)
 //           localStorage.removeItem("token");
 //           dispatch(userApi.util.resetApiState());
 //         } catch (err) {
-//           console.error("Logout failed:", err);
+//           console.error("Logout xətası:", err);
 //         }
 //       },
 //     }),
@@ -92,6 +90,7 @@
 //   }),
 // });
 
+// // Bütün hook-ları buradan eksiksiz export edirik
 // export const {
 //   useLoginMutation,
 //   useRegisterMutation,
@@ -100,10 +99,11 @@
 //   useForgotPasswordMutation,
 //   useResetPasswordMutation,
 //   useGetMyReferralsQuery,
-//   useGetMyNetworkTreeQuery,
+//   useGetMyNetworkTreeQuery, // <-- MyTree.jsx-dəki xətanı bu sətir düzəldir
 //   useGetAllUsersAdminQuery,
 //   useUpdateReferralByAdminMutation,
 // } = userApi;
+
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -114,12 +114,12 @@ export const userApi = createApi({
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
-        // Həm mobil, həm kompüter üçün tokeni başlıqlara əlavə edirik
+        // Tokeni hər sorğuda Header-ə mütləq əlavə edirik
         headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     },
-    // Kompüterdə sessiyaların (cookie) işləməsi üçün
+    // Kompüter və bəzi brauzerlərdə sessiyaların stabil qalması üçün
     credentials: "include" 
   }),
   tagTypes: ["User", "Referrals", "AdminUsers"],
@@ -155,15 +155,17 @@ export const userApi = createApi({
       },
     }),
     getUserProfile: builder.query({
-      query: () => "/me",
+      // MÜHÜM: Mobil brauzerlərin "Giriş et" düyməsində ilişib qalmaması üçün
+      // URL sonuna hər dəfə dəyişən vaxt ştampı əlavə edirik.
+      query: () => `/me?t=${new Date().getTime()}`,
       providesTags: ["User"],
     }),
     getMyReferrals: builder.query({
-      query: () => "/me/referrals",
+      query: () => `/me/referrals`,
       providesTags: ["Referrals"],
     }),
     getMyNetworkTree: builder.query({
-      query: () => "/me/network-tree",
+      query: () => `/me/network-tree`,
       providesTags: ["Referrals"],
     }),
     getAllUsersAdmin: builder.query({
@@ -195,7 +197,7 @@ export const userApi = createApi({
   }),
 });
 
-// Bütün hook-ları buradan eksiksiz export edirik
+// Bütün hook-ların eksiksiz exportu
 export const {
   useLoginMutation,
   useRegisterMutation,
@@ -204,7 +206,7 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useGetMyReferralsQuery,
-  useGetMyNetworkTreeQuery, // <-- MyTree.jsx-dəki xətanı bu sətir düzəldir
+  useGetMyNetworkTreeQuery,
   useGetAllUsersAdminQuery,
   useUpdateReferralByAdminMutation,
 } = userApi;
